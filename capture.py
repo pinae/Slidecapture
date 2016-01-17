@@ -4,6 +4,55 @@ from __future__ import division, print_function, unicode_literals
 import pygame
 import sys, os
 
+shifted = {
+    'a': 'A',
+    'b': 'B',
+    'c': 'C',
+    'd': 'D',
+    'e': 'E',
+    'f': 'F',
+    'g': 'G',
+    'h': 'H',
+    'i': 'I',
+    'j': 'J',
+    'k': 'K',
+    'l': 'L',
+    'm': 'M',
+    'n': 'N',
+    'o': 'O',
+    'p': 'P',
+    'q': 'Q',
+    'r': 'R',
+    's': 'S',
+    't': 'T',
+    'u': 'U',
+    'v': 'V',
+    'w': 'W',
+    'x': 'X',
+    'y': 'Y',
+    'z': 'Z',
+    '0': '=',
+    '1': '!',
+    '2': '"',
+    '3': '§',
+    '4': '$',
+    '5': '%',
+    '6': '&',
+    '7': '/',
+    '8': '(',
+    '9': ')',
+    '<': '>',
+    ',': ';',
+    '.': ':',
+    '-': '_',
+    '#': "'",
+    '+': '*',
+    'ö': 'Ö',
+    'ä': 'Ä',
+    'ü': 'Ü',
+    'ß': '?'
+}
+
 
 class Capturer(object):
     def __init__(self):
@@ -15,6 +64,7 @@ class Capturer(object):
         self.year = "2016"
         self.month = "01"
         self.tag = "Test"
+        self.shifted = False
 
     def display_photo(self):
         self.display_surface.fill((0, 0, 0))
@@ -55,6 +105,8 @@ class Capturer(object):
             if event.type == pygame.QUIT:
                 sys.exit(0)
             elif event.type == pygame.KEYDOWN:
+                if event.key in [pygame.K_LSHIFT, pygame.K_RSHIFT]:
+                    self.shifted = True
                 if self.mode == "normal":
                     if event.key == pygame.K_ESCAPE:
                         sys.exit(0)
@@ -85,10 +137,16 @@ class Capturer(object):
                         self.mode = "normal"
                     elif event.key == pygame.K_SPACE:
                         self.tag += " "
-                    elif len(pygame.key.name(event.key)) == 1:
-                        self.tag += pygame.key.name(event.key)
+                    elif chr(event.key) in shifted.keys():
+                        if self.shifted:
+                            self.tag += shifted[chr(event.key)]
+                        else:
+                            self.tag += chr(event.key)
                     elif event.key == pygame.K_BACKSPACE:
                         self.tag = self.tag[:-1]
+            elif event.type == pygame.KEYUP:
+                if event.key in [pygame.K_LSHIFT, pygame.K_RSHIFT]:
+                    self.shifted = False
 
 
 if __name__ == "__main__":
